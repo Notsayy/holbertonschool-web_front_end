@@ -50,17 +50,21 @@ h6 {
 .section {
   padding: var(--section-padding);
 }
+
 .section-header {
   text-align: var(--section-header-align);
-  pad: var(--section-header-padding);
+  padding: var(--section-header-padding);
 }
+
 .section-body {
-  pad: var(--section-body-padding);
+  padding: var(--section-body-padding);
 }
+
 .section-footer {
-  pad: var(--section-footer-padding);
+  padding: var(--section-footer-padding);
   text-align: var(--section-footer-align);
 }
+
 .section-title {
   font-family: var(--font-family-title);
   font-size: var(--font-size-xx-large);
@@ -111,5 +115,5 @@ h6 {
   --footer-padding: 5rem 0 1rem;
 }
 .footer {
-  pad: var(--footer-padding);
+  padding: var(--footer-padding);
 }
