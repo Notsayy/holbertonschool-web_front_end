@@ -183,15 +183,18 @@ ul.row {
   text-align: right;
 }
 
-.footer-adress {
+.footer-address {
   color: var(--text-color);
 }
+
 .social-link {
   display: block;
 }
+
 .social-link > svg {
   fill: var(--text-color);
 }
+
 [data-section-theme="dark"] {
   --text-color: var(--color-white);
   --section-title-color: var(--color-white);
