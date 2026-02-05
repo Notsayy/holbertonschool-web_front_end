@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced use of web storage</title>
+    <style>
+      li {
+        cursor: pointer;
+      }
+      .cart-item {
+        cursor: default;
+      }
+      .remove-link {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+      if (typeof Storage === "undefined" || !window.sessionStorage) {
+        alert(
+          "Sorry, your browser does not support Web storage. Try again with a better one",
+        );
+      } else {
+        createStore();
+        displayCart();
+      }
+      function getCartFromStorage() {
+        const cartString = sessionStorage.getItem("cart");
+        if (cartString) {
+          try {
+            return JSON.parse(cartString);
+          } catch (e) {
+            return {};
+          }
+        }
+        return {};
+      }
+      function addItemToCart(item) {
+        const cart = getCartFromStorage();
+
+        if (cart[item]) {
+          cart[item]++;
+        } else {
+          cart[item] = 1;
+        }
+
+        sessionStorage.setItem("cart", JSON.stringify(cart));
+        displayCart();
+      }
+      function removeItemfromCart(item) {
+        const cart = getCartFromStorage();
+        delete cart[item];
+        sessionStorage.setItem("cart", JSON.stringify(cart));
+        displayCart();
+      }
+      function clearCart() {
+        sessionStorage.clear();
+        displayCart();
+      }
+      function createStore() {
+        const storeTitle = document.createElement("h2");
+        storeTitle.textContent = "Available products:";
+        document.body.appendChild(storeTitle);
+
+        const productList = document.createElement("ul");
+
+        availableItems.forEach((item) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = item;
+          listItem.addEventListener("click", function () {
+            addItemToCart(item);
+          });
+          productList.appendChild(listItem);
+        });
+
+        document.body.appendChild(productList);
+      }
+      function displayCart() {
+        const existingTitle = document.querySelector("#cart-title");
+        const existingDiv = document.querySelector("#cart-container");
+
+        if (existingTitle) {
+          existingTitle.remove();
+        }
+        if (existingDiv) {
+          existingDiv.remove();
+        }
+        const cartTitle = document.createElement("h2");
+        cartTitle.id = "cart-title";
+        cartTitle.textContent = "Your cart:";
+        document.body.appendChild(cartTitle);
+        const cartDiv = document.createElement("div");
+        cartDiv.id = "cart-container";
+        document.body.appendChild(cartDiv);
+        updateCart();
+      }
+      function updateCart() {
+        const cartDiv = document.querySelector("#cart-container");
+        const existingList = cartDiv.querySelector("ul");
+        if (existingList) {
+          existingList.remove();
+        }
+        const cartList = document.createElement("ul");
+        const cart = getCartFromStorage();
+        const cartItems = Object.keys(cart);
+
+        if (cartItems.length === 0) {
+          const emptyItem = document.createElement("li");
+          emptyItem.textContent = "Your cart is empty";
+          emptyItem.style.cursor = "default";
+          cartList.appendChild(emptyItem);
+        } else {
+          const clearItem = document.createElement("li");
+          clearItem.textContent = "Clear my cart";
+          clearItem.addEventListener("click", clearCart);
+          cartList.appendChild(clearItem);
+          cartItems.forEach((item) => {
+            const listItem = document.createElement("li");
+            listItem.className = "cart-item";
+            listItem.textContent = `${item} x ${cart[item]} `;
+
+            const removeLink = document.createElement("span");
+            removeLink.textContent = "(remove)";
+            removeLink.className = "remove-link";
+            removeLink.addEventListener("click", function (e) {
+              e.stopPropagation();
+              removeItemfromCart(item);
+            });
+
+            listItem.appendChild(removeLink);
+            cartList.appendChild(listItem);
+          });
+        }
+
+        cartDiv.appendChild(cartList);
+      }
+    </script>
+  </body>
+</html>
